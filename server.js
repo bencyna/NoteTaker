@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const generateUniqueId = require("generate-unique-id");
+const newId = generateUniqueId();
 
 // Sets up the Express App
 
@@ -15,8 +16,6 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const notes = [];
-
 app.get("/notes", (req, res) =>
   res.sendFile(path.join(__dirname, "/public/notes.html"))
 );
@@ -24,16 +23,21 @@ app.get("/notes", (req, res) =>
 app.get("/api/notes/", (req, res) => {
   const rawdata = fs.readFileSync("db/db.json", "utf8");
   const database = JSON.parse(rawdata);
-  console.log(database);
   res.json(database);
 });
 
 app.post("/api/notes", (req, res) => {
-  const newNote = req.body;
+  let newNote = req.body;
 
   fs.readFile("db/db.json", function (err, data) {
     const json = JSON.parse(data);
+
+    const indexNum = json.length;
+    // newNote += { uniqueId: newId };
+
     json.push(newNote);
+    json[indexNum].uniqueId = newId;
+    console.log(json[indexNum]);
 
     const jsonString = JSON.stringify(json);
 
