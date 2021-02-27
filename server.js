@@ -37,7 +37,6 @@ app.post("/api/notes", (req, res) => {
 
     json.push(newNote);
     json[indexNum].uniqueId = newId;
-    console.log(json[indexNum]);
 
     const jsonString = JSON.stringify(json);
 
@@ -47,6 +46,31 @@ app.post("/api/notes", (req, res) => {
     });
 
     res.json(jsonString);
+  });
+});
+
+app.get("/api/notes/:id", (req, res) => {
+  const deleteNote = req.params.id;
+
+  fs.readFile("db/db.json", function (err, data) {
+    const fileData = JSON.parse(data);
+
+    for (const key in fileData) {
+      if (fileData[key].uniqueId == deleteNote) {
+        fileData.splice(key, 1);
+        console.log(fileData);
+        const newJSON = JSON.stringify(fileData);
+
+        fs.writeFile("db/db.json", newJSON, "utf8", function (err) {
+          if (err) return console.log(err);
+          console.log("worked");
+
+          return res.json("Deleted Note");
+        });
+      } else {
+        return res.json("Nothing has occured");
+      }
+    }
   });
 });
 
