@@ -31,22 +31,18 @@ app.get("/api/notes/", (req, res) => {
 app.post("/api/notes", (req, res) => {
   const newNote = req.body;
 
-  // newNote.routeName = newNote.name;
-
-  // console.log(newNote);
-
-  // notes.push(newNote);
-
   fs.readFile("db/db.json", function (err, data) {
     const json = JSON.parse(data);
-    console.log(json);
+    json.push(newNote);
 
-    // fs.writeFile("db/db.json", function (err) {
-    //   if (err) return console.log(err);
-    //   json.stringify(json);
-    // });
+    const jsonString = JSON.stringify(json);
 
-    // res.json(newNote);
+    fs.writeFile("db/db.json", jsonString, "utf8", function (err) {
+      if (err) return console.log(err);
+      console.log("worked");
+    });
+
+    res.json(jsonString);
   });
 });
 
