@@ -10,6 +10,7 @@ if (window.location.pathname === "/notes") {
   saveNoteBtn = document.querySelector(".save-note");
   newNoteBtn = document.querySelector(".new-note");
   noteList = document.querySelectorAll(".list-container .list-group");
+  noteListItems = document.querySelectorAll(".list-group-item");
 }
 
 // Show an element
@@ -53,7 +54,10 @@ const deleteNote = (id) =>
 const renderActiveNote = () => {
   hide(saveNoteBtn);
 
-  if (activeNote.id) {
+  noteTitle.removeAttribute("readonly", false);
+  noteText.removeAttribute("readonly", false);
+
+  if (activeNote.uniqueId) {
     noteTitle.setAttribute("readonly", true);
     noteText.setAttribute("readonly", true);
     noteTitle.value = activeNote.title;
@@ -68,6 +72,7 @@ const handleNoteSave = () => {
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
+    uniqueId: 999,
   };
   saveNote(newNote).then(() => {
     getAndRenderNotes();
