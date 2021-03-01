@@ -45,6 +45,7 @@ app.post("/api/notes", (req, res) => {
 
     // adds new note to current notes
     json.push(newNote);
+    // Uses npm package to generate a unique id for the updated note
     json[indexNum].uniqueId = newId;
 
     const jsonString = JSON.stringify(json);
